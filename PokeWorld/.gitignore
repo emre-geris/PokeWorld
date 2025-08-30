@@ -1,0 +1,66 @@
+# === Python & Django ===
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pdb
+*.pkl
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Django-related
+*.log
+*.pot
+*.pyc
+*.mo
+db.sqlite3
+db.sqlite3-journal
+media/          # User-uploaded files
+pokemon_charts/ # Generated chart images
+
+# Django environment
+.env
+.venv/
+env/
+venv/
+ENV/
+*.env
+
+# === VSCode / IDE ===
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# === macOS / Windows ===
+.DS_Store
+Thumbs.db
+
+# === Node & Tailwind ===
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+.pnp/
+.pnp.js
+
+# Tailwind build artifacts
+static/css/
+staticfiles/
+*.map
+
+# === Coverage / Test ===
+.coverage
+htmlcov/
+.tox/
+.pytest_cache/
+.mypy_cache/
+pytestdebug.log
+coverage.xml
+
+# === Git ===
+*.orig

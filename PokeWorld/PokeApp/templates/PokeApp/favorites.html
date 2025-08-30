@@ -1,0 +1,171 @@
+{% extends 'base.html' %} {% block title %}My Favorites
+{% endblock %} 
+{% block hero %}{% endblock %} {% block cards %}
+<div class="min-h-[60vh] w-full py-12 px-2">
+   <div
+      class="max-w-3xl mx-auto bg-pink-50 p-8 rounded-3xl shadow-2xl border-4 border-pink-300">
+      <h2
+         class="text-3xl font-extrabold mb-10 text-center text-pink-500 drop-shadow-lg flex items-center justify-center gap-2">
+         <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="#f472b6"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            class="w-8 h-8 inline-block animate-bounce">
+            <path
+               stroke-linecap="round"
+               stroke-linejoin="round"
+               stroke-width="2"
+               d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l2.036 6.29a1 1 0 00.95.69h6.6c.969 0 1.371 1.24.588 1.81l-5.347 3.89a1 1 0 00-.364 1.118l2.036 6.29c.3.921-.755 1.688-1.54 1.118l-5.347-3.89a1 1 0 00-1.176 0l-5.347 3.89c-.784.57-1.838-.197-1.54-1.118l2.036-6.29a1 1 0 00-.364-1.118l-5.347-3.89c-.783-.57-.38-1.81.588-1.81h6.6a1 1 0 00.95-.69l2.036-6.29z" />
+         </svg>
+         My Favorite Pokémon
+      </h2>
+      {% if pokemons %}
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+         {% for p in pokemons %}
+         <div
+            class="flex items-center gap-8 bg-yellow-50 rounded-3xl p-8 border-4 border-yellow-200 shadow-md hover:shadow-2xl hover:scale-[1.03] transition-all duration-300 group relative opacity-0 animate-fadein">
+            <button
+               class="absolute top-3 left-3 favorite-toggle"
+               data-pokemon-id="{{ p.id }}"
+               style="
+                  background: none;
+                  border: none;
+                  padding: 0;
+                  cursor: pointer;
+               ">
+               <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="#facc15"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  class="w-8 h-8 drop-shadow transition-transform hover:scale-110">
+                  <path
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     stroke-width="2"
+                     d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l2.036 6.29a1 1 0 00.95.69h6.6c.969 0 1.371 1.24.588 1.81l-5.347 3.89a1 1 0 00-.364 1.118l2.036 6.29c.3.921-.755 1.688-1.54 1.118l-5.347-3.89a1 1 0 00-1.176 0l-5.347 3.89c-.784.57-1.838-.197-1.54-1.118l2.036-6.29a1 1 0 00-.364-1.118l-5.347-3.89c-.783-.57-.38-1.81.588-1.81h6.6a1 1 0 00.95-.69l2.036-6.29z" />
+               </svg>
+            </button>
+            {% block extra_js %}
+            <script>
+               document.addEventListener("DOMContentLoaded", function () {
+                  document
+                     .querySelectorAll(".favorite-toggle")
+                     .forEach(function (btn) {
+                        btn.addEventListener("click", function (e) {
+                           e.preventDefault();
+                           e.stopPropagation();
+                           const pokemonId =
+                              btn.getAttribute("data-pokemon-id");
+                           fetch(`/favorite/${pokemonId}/`, {
+                              method: "POST",
+                              headers: {
+                                 "X-CSRFToken": getCookie("csrftoken"),
+                                 "X-Requested-With": "XMLHttpRequest",
+                              },
+                           })
+                              .then((res) => res.json())
+                              .then((data) => {
+                                 if (data.status === "removed") {
+                                    btn.closest(".flex.items-center").remove();
+                                 }
+                              });
+                           return false;
+                        });
+                     });
+
+                  function getCookie(name) {
+                     let cookieValue = null;
+                     if (document.cookie && document.cookie !== "") {
+                        const cookies = document.cookie.split(";");
+                        for (let i = 0; i < cookies.length; i++) {
+                           const cookie = cookies[i].trim();
+                           if (
+                              cookie.substring(0, name.length + 1) ===
+                              name + "="
+                           ) {
+                              cookieValue = decodeURIComponent(
+                                 cookie.substring(name.length + 1)
+                              );
+                              break;
+                           }
+                        }
+                     }
+                     return cookieValue;
+                  }
+               });
+            </script>
+            {% endblock %}
+            <img
+               src="{{ p.image_url }}"
+               alt="{{ p.name }}"
+               class="w-28 h-28 object-contain rounded-2xl bg-white border-2 border-yellow-100 shadow" />
+            <div class="flex flex-col flex-1">
+               <h3
+                  class="text-lg font-bold mb-1 text-gray-800 group-hover:text-yellow-600 transition-colors">
+                  {{ p.name }}
+               </h3>
+               <div class="flex gap-2 mb-2">
+                  <span
+                     class="px-2 py-1 rounded text-xs font-semibold text-white {{ p.bg_color1 }}"
+                     >{{ p.type1 }}</span
+                  >
+                  {% if p.type2 %}
+                  <span
+                     class="px-2 py-1 rounded text-xs font-semibold text-white {{ p.bg_color2 }}"
+                     >{{ p.type2 }}</span
+                  >
+                  {% endif %}
+               </div>
+               <div class="flex gap-2 mt-2">
+                  <a
+                     href="{% url 'PokeApp:pokemon_detail' p.slug %}"
+                     class="px-5 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-pink-400 text-white font-semibold shadow hover:from-blue-600 hover:to-pink-500 transition-all focus:outline-none focus:ring-2 focus:ring-blue-200">
+                     <span class="inline-block align-middle">Details</span>
+                  </a>
+               </div>
+            </div>
+         </div>
+         {% endfor %}
+      </div>
+      <style>
+         @keyframes fadein {
+            from {
+               opacity: 0;
+               transform: translateY(20px);
+            }
+            to {
+               opacity: 1;
+               transform: none;
+            }
+         }
+         .animate-fadein {
+            animation: fadein 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+         }
+         @keyframes bounce-once {
+            0% {
+               transform: translateY(0);
+            }
+            30% {
+               transform: translateY(-8px);
+            }
+            60% {
+               transform: translateY(0);
+            }
+            100% {
+               transform: none;
+            }
+         }
+         .animate-bounce-once {
+            animation: bounce-once 0.7s 1;
+         }
+      </style>
+      {% else %}
+      <p class="text-center text-gray-500 text-lg mt-8">
+         You have not favorited any Pokémon yet.
+      </p>
+      {% endif %}
+   </div>
+</div>
+{% endblock %}

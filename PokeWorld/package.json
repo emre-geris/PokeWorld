@@ -1,0 +1,19 @@
+{
+  "name": "pokeworld",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+     "dev": "npx @tailwindcss/cli -i ./static/src/input.css -o ./static/dist/output.css --watch",
+      "django": "python manage.py runserver",
+      "start": "concurrently \"npm run dev\" \"npm run django\""
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@tailwindcss/cli": "^4.1.12",
+    "concurrently": "^9.2.1",
+    "tailwindcss": "^4.1.12"
+  }
+}

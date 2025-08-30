@@ -1,0 +1,26 @@
+@import "tailwindcss";
+
+@theme {
+   --color-primary:#ee4b2b;
+   --color-secondary:#f9d423;
+   --color-pastel:#fdeca8;
+
+}
+
+@utility containerCustom {
+  @apply mx-auto px-4 
+         sm:max-w-[540px] 
+         md:max-w-[720px] 
+         lg:max-w-[960px] 
+         xl:max-w-[1140px] 
+         2xl:max-w-[1320px];
+}
+
+@utility containerCustom-s{
+  @apply mx-auto px-4 
+         sm:max-w-[360px] 
+         md:max-w-[500px] 
+         lg:max-w-[680px] 
+         xl:max-w-[800px] 
+         2xl:max-w-[900px];
+}

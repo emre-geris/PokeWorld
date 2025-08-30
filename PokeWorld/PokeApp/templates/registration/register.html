@@ -1,0 +1,61 @@
+{% extends 'base.html' %} {% block title %}Sign Up{% endblock %} 
+{% block hero%}{% endblock %} {% block cards %}
+<div
+   class="flex flex-col justify-center items-center px-4 py-8 min-h-[calc(100vh-6rem)] bg-gradient-to-br from-pink-100 via-yellow-100 to-blue-100 overflow-hidden">
+   <div
+      class="w-full max-w-md h-[420px] sm:h-[480px] max-h-[80vh] bg-yellow-50 p-6 sm:p-8 rounded-3xl shadow-2xl border-4 border-yellow-300 flex flex-col justify-between overflow-hidden">
+      <div>
+         <h2
+            class="text-2xl sm:text-3xl font-extrabold mb-4 sm:mb-6 text-center text-yellow-500 drop-shadow animate-bounce">
+            Sign Up
+         </h2>
+         <form method="post" class="space-y-4">
+            {% csrf_token %} {% for field in form %}
+            <div>
+               <label
+                  for="{{ field.id_for_label }}"
+                  class="block text-gray-700 font-semibold mb-2">
+                  {{ field.label }}
+               </label>
+               <input
+                  name="{{ field.html_name }}"
+                  id="{{ field.id_for_label }}"
+                  type="{{ field.field.widget.input_type }}"
+                  value="{{ field.value|default_if_none:'' }}"
+                  class="w-full px-4 py-2 rounded-xl border-2 border-gray-200 bg-gray-50 text-base sm:text-lg focus:border-red-500 focus:ring-2 focus:ring-red-200 outline-none transition"
+                  autocomplete="{{ field.field.widget.attrs.autocomplete|default:'' }}"
+                  {%
+                  if
+                  field.field.required
+                  %}required{%
+                  endif
+                  %} />
+               {% if field.errors %}
+               <p class="text-red-500 text-sm mt-1">
+                  {{ field.errors|striptags }}
+               </p>
+               {% endif %}
+            </div>
+            {% endfor %} {% if form.non_field_errors %}
+            <p class="text-red-500 text-sm">
+               {{ form.non_field_errors|striptags }}
+            </p>
+            {% endif %}
+            <button
+               type="submit"
+               class="w-full bg-gradient-to-r from-yellow-400 to-pink-400 text-white py-3 rounded-2xl text-lg font-bold shadow hover:from-yellow-500 hover:to-pink-500 transition-all">
+               Sign Up
+            </button>
+         </form>
+      </div>
+      <p class="mt-4 text-center text-sm sm:text-base">
+         Already have an account?
+         <a
+            href="{% url 'PokeApp:login' %}"
+            class="text-yellow-600 font-semibold hover:underline"
+            >Login</a
+         >
+      </p>
+   </div>
+</div>
+{% endblock %}

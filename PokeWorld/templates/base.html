@@ -1,0 +1,530 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}My amazing site{% endblock %}</title>
+
+    <!-- Tailwind CSS -->
+    <link rel="stylesheet" href="{% static 'dist/output.css' %}" />
+
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* 📝 Global font styling */
+      body {
+        font-family: "Fredoka", "Poppins", "Quicksand", Arial, sans-serif;
+      }
+    </style>
+  </head>
+
+  <!-- 🎨 Apply brighter gradient background and subtle Pokéball pattern -->
+  <body
+    class="min-h-screen flex flex-col pt-24 bg-gradient-to-br from-pink-100 via-yellow-100 to-blue-100">
+    
+    <!-- 🌟 Navbar with gradient background for a more colorful look -->
+    <nav
+      class="bg-gradient-to-r from-yellow-200 via-red-200 to-pink-200/90 backdrop-blur-md shadow-lg fixed top-0 left-0 w-full z-50 rounded-b-2xl border-b border-gray-200"
+    >
+      <div
+        class="containerCustom mx-auto grid grid-cols-3 items-center h-16 relative px-4"
+      >
+        <!-- 🔥 Logo -->
+        <div class="flex items-center justify-start">
+          <a
+            href="{% url 'PokeApp:home' %}"
+            class="block w-max transition-transform duration-300 hover:scale-110"
+          >
+            <img
+              src="/static/src/logo.png"
+              alt="Logo"
+              class="w-[120px] h-[66px]"
+            />
+          </a>
+        </div>
+
+        <!-- 🔍 Desktop Search Bar (Glassmorphism) -->
+        <div class="hidden lg:flex justify-center">
+          <div
+            class="flex items-center bg-white/70 backdrop-blur-md rounded-xl shadow border border-gray-200 max-w-[300px] px-4 overflow-hidden transition-all duration-300 focus-within:ring-2 focus-within:ring-blue-300 hover:scale-105"
+          >
+            <input
+              id="search-input"
+              type="text"
+              placeholder="Search Pokémon"
+              class="flex-grow px-4 py-2 text-black placeholder-gray-400 focus:outline-none"
+              autocomplete="off"
+            />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="2"
+              stroke="currentColor"
+              class="w-6 h-6 text-red-400 hover:text-red-600 transition cursor-pointer"
+              id="search-icon"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1110.5 3a7.5 7.5 0 016.15 13.65z"
+              />
+            </svg>
+          </div>
+        </div>
+
+        <!-- 🎨 Desktop Right Buttons with colorful hover effects -->
+        <div class="hidden lg:flex justify-end gap-3">
+          {% if user.is_authenticated %}
+          <span
+            class="inline-flex items-center px-4 py-2 text-gray-700 font-semibold"
+            >Hello, {{ user.username }}</span
+          >
+          <a
+            href="{% url 'PokeApp:favorites' %}"
+            class="relative inline-flex items-center justify-center px-4 py-2 font-medium rounded-xl shadow bg-gradient-to-r from-blue-400 to-blue-500 text-white border border-transparent transition-all duration-300 hover:scale-105 hover:shadow-lg"
+          >
+            <span class="z-10">My Favorites</span>
+          </a>
+          <a
+            href="{% url 'PokeApp:logout' %}"
+            class="relative inline-flex items-center justify-center px-4 py-2 font-medium rounded-xl shadow bg-gradient-to-r from-red-400 to-red-500 text-white border border-transparent transition-all duration-300 hover:scale-105 hover:shadow-lg"
+          >
+            <span class="z-10">Logout</span>
+          </a>
+          {% else %}
+          <a
+            href="{% url 'PokeApp:login' %}"
+            class="relative inline-flex items-center justify-center px-4 py-2 font-medium rounded-xl shadow bg-gradient-to-r from-blue-400 to-blue-500 text-white border border-transparent transition-all duration-300 hover:scale-105 hover:shadow-lg"
+          >
+            <span class="z-10">Log In</span>
+          </a>
+          <a
+            href="{% url 'PokeApp:register' %}"
+            class="relative inline-flex items-center justify-center px-4 py-2 font-medium rounded-xl shadow bg-gradient-to-r from-yellow-400 to-yellow-500 text-white border border-transparent transition-all duration-300 hover:scale-105 hover:shadow-lg"
+          >
+            <span class="z-10">Sign Up</span>
+          </a>
+          {% endif %}
+        </div>
+
+        <!-- 📱 Mobile Search + Hamburger Menu -->
+        <div class="flex lg:hidden items-center justify-end gap-2 col-span-2">
+          <div
+            class="flex items-center bg-white/70 backdrop-blur-md rounded-xl shadow border border-gray-200 w-10 h-10 sm:w-[160px] px-2 focus-within:ring-2 focus-within:ring-blue-300 overflow-hidden transition-all duration-300 hover:shadow-xl focus-within:w-[200px]"
+          >
+            <input
+              id="search-input-mobile"
+              type="text"
+              placeholder="Search Pokémon"
+              class="hidden sm:flex flex-grow px-2 py-1 text-black placeholder-gray-400 focus:outline-none"
+              autocomplete="off"
+            />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="2"
+              stroke="currentColor"
+              class="w-5 h-5 text-red-400 hover:text-red-600 transition cursor-pointer"
+              id="search-icon-mobile"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1110.5 3a7.5 7.5 0 016.15 13.65z"
+              />
+            </svg>
+          </div>
+          <button
+            id="menu-btn"
+            class="ml-2 block lg:hidden text-white focus:outline-none"
+          >
+            <svg
+              class="w-8 h-8"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
+          </button>
+        </div>
+
+        <!-- 📱 Mobile Menu (Colorful gradient) -->
+        <div
+          id="mobile-menu"
+          class="w-full flex-col bg-gradient-to-r from-pink-300 to-yellow-300 text-white rounded-b-xl shadow-lg absolute left-0 top-16 z-50 hidden lg:hidden transition-all duration-300 transform -translate-y-5 opacity-0"
+        >
+          <a href="#all" class="block px-6 py-3 border-b border-white/10"
+            >View All Pokémon</a
+          >
+          {% if user.is_authenticated %}
+          <span class="block px-6 py-3 border-b border-white/10"
+            >Hello, {{ user.username }}</span
+          >
+          <a
+            href="{% url 'PokeApp:favorites' %}"
+            class="block px-6 py-3 border-b border-white/10"
+            >My Favorites</a
+          >
+          <a href="{% url 'PokeApp:logout' %}" class="block px-6 py-3"
+            >Logout</a
+          >
+          {% else %}
+          <a
+            href="{% url 'PokeApp:login' %}"
+            class="block px-6 py-3 border-b border-white/10"
+            >Log In</a
+          >
+          <a href="{% url 'PokeApp:register' %}" class="block px-6 py-3"
+            >Sign Up</a
+          >
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- 🔧 Mobile menu JS -->
+      <script>
+        const menuBtn = document.getElementById("menu-btn");
+        const mobileMenu = document.getElementById("mobile-menu");
+        if (menuBtn && mobileMenu) {
+          menuBtn.addEventListener("click", () => {
+            const isHidden = mobileMenu.classList.contains("hidden");
+            if (isHidden) {
+              mobileMenu.classList.remove("hidden");
+              setTimeout(() => {
+                mobileMenu.classList.remove("-translate-y-5", "opacity-0");
+              }, 10);
+            } else {
+              mobileMenu.classList.add("-translate-y-5", "opacity-0");
+              setTimeout(() => mobileMenu.classList.add("hidden"), 300);
+            }
+          });
+        }
+      </script>
+    </nav>
+
+    {% block hero %}
+    <!-- 🌟 Hero Section with gradient title -->
+    <section
+      class="containerCustom mx-auto bg-white/80 backdrop-blur-sm border border-gray-200 text-gray-700 rounded-xl sm:rounded-2xl shadow text-center w-[80vw] mb-6 sm:mb-10 p-4 sm:p-8 lg:p-12"
+    >
+      <h1
+        class="text-3xl sm:text-5xl lg:text-6xl font-bold mb-2 bg-gradient-to-r from-red-500 via-yellow-500 to-blue-500 bg-clip-text text-transparent"
+      >
+        Welcome to PokéWorld!
+      </h1>
+      <p class="text-base sm:text-lg text-gray-600">
+        Search, discover, and catch 'em all. Your Pokémon adventure starts here.
+      </p>
+    </section>
+    {% endblock %}
+
+    {% block cards%}
+    <!-- 🎴 Pokémon Card Section -->
+    <main class="flex-1">
+      <div
+        class="max-w-full sm:max-w-2xl lg:max-w-4xl mb-6 sm:mb-10 mx-auto bg-white/80 backdrop-blur-md shadow rounded-xl sm:rounded-[1.2rem] border border-gray-200"
+      >
+        <h2
+          class="text-2xl sm:text-3xl lg:text-4xl font-semibold mt-4 sm:mt-8 lg:mt-10 ms-2 sm:ms-4 lg:ms-6 text-gray-800"
+        >
+          All Pokémon
+        </h2>
+
+        <!-- 🃏 Pokemon Cards -->
+        <div
+          id="pokemon-cards"
+          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 p-2 sm:p-4 lg:p-6"
+        >
+          {% for p in pokemons %}
+          <div class="relative group min-h-[260px] pokemon-card-container">
+            <a
+              href="{% url 'PokeApp:pokemon_detail' p.slug %}"
+              class="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg p-4 flex flex-col items-center hover:scale-105 transition-transform pt-6 pr-2 w-full border border-gray-100"
+            >
+              <img
+                src="{{ p.image_url }}"
+                alt="{{ p.name }}"
+                class="w-24 h-24 mb-2"
+              />
+              <h3 class="text-xl font-bold mb-1">{{ p.name|capfirst }}</h3>
+              <div class="text-sm text-gray-600 mb-1">
+                Type:
+                <span class="font-semibold {{ p.color1 }}">
+                  {{ p.type1|capfirst }}
+                </span>
+                {% if p.type2 %} /
+                <span class="font-semibold {{ p.color2 }}">
+                  {{ p.type2|capfirst }}
+                </span>
+                {% endif %}
+              </div>
+              <div class="text-sm text-gray-600">
+                HP: <span class="font-semibold">{{ p.hp }}</span> | Atk:
+                <span class="font-semibold">{{ p.attack }}</span> | Def:
+                <span class="font-semibold">{{ p.defense }}</span>
+              </div>
+            </a>
+
+            <!-- ⭐ Favorite Button -->
+            {% if user.is_authenticated %}
+            <button
+              class="absolute top-2 right-2 bg-white rounded-full p-1 favorite-btn z-10"
+              data-pokemon-id="{{ p.id }}"
+              aria-label="Toggle Favorite"
+            >
+              {% if p.is_favorite %}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="#facc15"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                class="w-7 h-7"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l2.036 6.29a1 1 0 00.95.69h6.6c.969 0 1.371 1.24.588 1.81l-5.347 3.89a1 1 0 00-.364 1.118l2.036 6.29c.3.921-.755 1.688-1.54 1.118l-5.347-3.89a1 1 0 00-1.176 0l-5.347 3.89c-.784.57-1.838-.197-1.54-1.118l2.036-6.29a1 1 0 00-.364-1.118l-5.347-3.89c-.783-.57-.38-1.81.588-1.81h6.6a1 1 0 00.95-.69l2.036-6.29z"
+                />
+              </svg>
+              {% else %}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="#facc15"
+                class="w-7 h-7"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l2.036 6.29a1 1 0 00.95.69h6.6c.969 0 1.371 1.24.588 1.81l-5.347 3.89a1 1 0 00-.364 1.118l2.036 6.29c.3.921-.755 1.688-1.54 1.118l-5.347-3.89a1 1 0 00-1.176 0l-5.347 3.89c-.784.57-1.838-.197-1.54-1.118l2.036-6.29a1 1 0 00-.364-1.118l-5.347-3.89c-.783-.57-.38-1.81.588-1.81h6.6a1 1 0 00.95-.69l2.036-6.29z"
+                />
+              </svg>
+              {% endif %}
+            </button>
+            {% endif %}
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </main>
+    {% endblock %}
+
+    <!-- 🔻 Footer -->
+    <footer
+      class="mt-auto text-center py-4 bg-gradient-to-r from-red-500 to-pink-500 text-white shadow-lg"
+    >
+      &copy; 2025 PokéWorld. All rights reserved.
+    </footer>
+      <script>
+         // Favorite toggle
+         document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll(".favorite-btn").forEach((btn) => {
+               btn.addEventListener("click", function (e) {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  const pokemonId = this.getAttribute("data-pokemon-id");
+                  fetch(`/favorite/${pokemonId}/`, {
+                     method: "POST",
+                     headers: {
+                        "X-CSRFToken":
+                           (
+                              document.querySelector(
+                                 "[name=csrfmiddlewaretoken]"
+                              ) || {}
+                           ).value || getCookie("csrftoken"),
+                        "X-Requested-With": "XMLHttpRequest",
+                     },
+                  })
+                     .then((res) => res.json())
+                     .then((data) => {
+                        if (data.status === "added") {
+                           this.innerHTML = `<svg xmlns=\"http://www.w3.org/2000/svg\" fill=\"#facc15\" viewBox=\"0 0 24 24\" stroke=\"currentColor\" class=\"w-7 h-7\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M11.049 2.927c.3-.921 1.603-.921 1.902 0l2.036 6.29a1 1 0 00.95.69h6.6c.969 0 1.371 1.24.588 1.81l-5.347 3.89a1 1 0 00-.364 1.118l2.036 6.29c.3.921-.755 1.688-1.54 1.118l-5.347-3.89a1 1 0 00-1.176 0l-5.347 3.89c-.784.57-1.838-.197-1.54-1.118l2.036-6.29a1 1 0 00-.364-1.118l-5.347-3.89c-.783-.57-.38-1.81.588-1.81h6.6a1 1 0 00.95-.69l2.036-6.29z\" /></svg>`;
+                        } else if (data.status === "removed") {
+                           this.innerHTML = `<svg xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" viewBox=\"0 0 24 24\" stroke=\"#facc15\" class=\"w-7 h-7\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M11.049 2.927c.3-.921 1.603-.921 1.902 0l2.036 6.29a1 1 0 00.95.69h6.6c.969 0 1.371 1.24.588 1.81l-5.347 3.89a1 1 0 00-.364 1.118l2.036 6.29c.3.921-.755 1.688-1.54 1.118l-5.347-3.89a1 1 0 00-1.176 0l-5.347 3.89c-.784.57-1.838-.197-1.54-1.118l2.036-6.29a1 1 0 00-.364-1.118l-5.347-3.89c-.783-.57-.38-1.81.588-1.81h6.6a1 1 0 00.95-.69l2.036-6.29z\" /></svg>`;
+                        }
+                     });
+               });
+            });
+         });
+         // Helper for CSRF
+         function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== "") {
+               const cookies = document.cookie.split(";");
+               for (let i = 0; i < cookies.length; i++) {
+                  const cookie = cookies[i].trim();
+                  if (cookie.substring(0, name.length + 1) === name + "=") {
+                     cookieValue = decodeURIComponent(
+                        cookie.substring(name.length + 1)
+                     );
+                     break;
+                  }
+               }
+            }
+            return cookieValue;
+         }
+         // Search functionality for desktop
+         const searchInput = document.getElementById("search-input");
+         const searchIcon = document.getElementById("search-icon");
+         const pokemonCards = document.getElementById("pokemon-cards");
+         let allPokemons = [];
+         if (pokemonCards) {
+            allPokemons = Array.from(
+               pokemonCards.getElementsByClassName("pokemon-card-container")
+            );
+         }
+         function filterPokemons(query) {
+            const q = query.trim().toLowerCase();
+            let found = false;
+            allPokemons.forEach((card) => {
+               const name = card
+                  .querySelector("h3")
+                  .textContent.trim()
+                  .toLowerCase();
+               if (name.includes(q)) {
+                  card.style.display = "block"; // Show the entire card container
+                  if (!found) {
+                     found = card.querySelector("a"); // Keep track of the first matching card link
+                  }
+               } else {
+                  card.style.display = "none"; // Hide the entire card container
+               }
+            });
+            return found;
+         }
+         if (searchInput) {
+            searchInput.addEventListener("input", (e) => {
+               filterPokemons(e.target.value);
+            });
+            searchInput.addEventListener("keydown", (e) => {
+               if (e.key === "Enter") {
+                  const found = filterPokemons(e.target.value);
+                  if (found && found.href) {
+                     window.location.href = found.href;
+                  }
+               }
+            });
+         }
+         if (searchIcon) {
+            searchIcon.addEventListener("click", () => {
+               const found = filterPokemons(searchInput.value);
+               if (found && found.href) {
+                  window.location.href = found.href;
+               }
+            });
+         }
+         // Search functionality for mobile
+         const searchInputMobile = document.getElementById(
+            "search-input-mobile"
+         );
+         const searchIconMobile = document.getElementById("search-icon-mobile");
+         if (searchInputMobile) {
+            searchInputMobile.addEventListener("input", (e) => {
+               filterPokemons(e.target.value);
+            });
+            searchInputMobile.addEventListener("keydown", (e) => {
+               if (e.key === "Enter") {
+                  const found = filterPokemons(e.target.value);
+                  if (found && found.href) {
+                     window.location.href = found.href;
+                  }
+               }
+            });
+         }
+         if (searchIconMobile) {
+            searchIconMobile.addEventListener("click", () => {
+               const found = filterPokemons(searchInputMobile.value);
+               if (found && found.href) {
+                  window.location.href = found.href;
+               }
+            });
+         }
+         let page = 2;
+         let loading = false;
+         let endReached = false;
+         window.addEventListener("scroll", async function () {
+            if (loading || endReached) return;
+            if (
+               window.innerHeight + window.scrollY >=
+               document.body.offsetHeight - 300
+            ) {
+               loading = true;
+               try {
+                  const res = await fetch(`/api/pokemons/?page=${page}`);
+                  if (!res.ok) {
+                     endReached = true;
+                     return;
+                  }
+                  const data = await res.json();
+                  if (!data.results || data.results.length === 0) {
+                     endReached = true;
+                     return;
+                  }
+                  const container = document.getElementById("pokemon-cards");
+                  data.results.forEach((p) => {
+                     const a = document.createElement("a");
+                     a.href = p.detail_url;
+                     a.className =
+                        "bg-white rounded-xl shadow-lg p-4 flex flex-col items-center hover:scale-105 transition-transform";
+                     a.innerHTML = `
+                        <img src="${p.image_url}" alt="${
+                        p.name
+                     }" class="w-24 h-24 mb-2" />
+                        <h3 class="text-xl font-bold mb-1">${p.name}</h3>
+                        <div class="text-sm text-gray-600 mb-1">
+                           Type:
+                           <span class="font-semibold ${p.color1}">${
+                        p.type1
+                     }</span>
+                           ${
+                              p.type2
+                                 ? '/<span class="font-semibold ' +
+                                   p.color2 +
+                                   '">' +
+                                   p.type2 +
+                                   "</span>"
+                                 : ""
+                           }
+                        </div>
+                        <div class="text-sm text-gray-600">
+                           HP: <span class="font-semibold">${
+                              p.hp
+                           }</span> | Atk: <span class="font-semibold">${
+                        p.attack
+                     }</span> | Def: <span class="font-semibold">${
+                        p.defense
+                     }</span>
+                        </div>
+                     `;
+                     container.appendChild(a);
+                  });
+                  // Eğer bir sonraki sayfa yoksa sonsuz scroll'u durdur
+                  if (!data.next) {
+                     endReached = true;
+                  } else {
+                     page++;
+                  }
+               } finally {
+                  loading = false;
+               }
+            }
+         });
+      </script>
+   </body>
+</html>
